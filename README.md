@@ -10,6 +10,13 @@ The main objectives of this project is to process LIDAR data from a HDL 64. The 
 The file structure includes:
 
 |--src
+|----render
+|------box.h
+|----sensors
+|------data/pcd
+|--------data_1
+|--------data_2
+|----environment.cpp
 |----
 
 ## Official README
