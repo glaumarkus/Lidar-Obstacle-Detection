@@ -12,17 +12,17 @@ using namespace pcl;
 
 
 // params
-#define CLUSTER_DISTANCE 0.33
-#define CLUSTER_MIN 20
-#define CLUSTER_MAX 5000
+const float CLUSTER_DISTANCE = 0.33;
+const int CLUSTER_MIN = 20;
+const int CLUSTER_MAX = 5000;
 
-inline void log(string x){cout << x << endl;}
+inline void log(string x){std::cout << x << std::endl;}
 
 static void clusterHelper(
     int index, 
-    const vector<vector<float>> points, 
-    vector<int>& cluster, 
-    vector<bool>& processed, 
+    const std::vector<std::vector<float>>& points, 
+    std::vector<int>& cluster, 
+    std::vector<bool>& processed, 
     KdTree* tree) {
 
     processed[index] = true;
@@ -36,10 +36,10 @@ static void clusterHelper(
     }
 }
 
-static vector<vector<int>> euclideanCluster(const vector<vector<float>>& points, KdTree* tree)
+static std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree)
 {
-    vector<vector<int>> clusters;
-    vector<bool> processed(points.size(), false);
+    std::vector<std::vector<int>> clusters;
+    std::vector<bool> processed(points.size(), false);
 
     int i = 0;
 
@@ -49,7 +49,7 @@ static vector<vector<int>> euclideanCluster(const vector<vector<float>>& points,
             continue;
         }
 
-        vector<int> cluster;
+        std::vector<int> cluster;
         clusterHelper(i, points, cluster, processed, tree);
         if (cluster.size() >= CLUSTER_MIN && cluster.size() <= CLUSTER_MAX) {
             clusters.push_back(cluster);
@@ -66,7 +66,7 @@ static vector<vector<int>> euclideanCluster(const vector<vector<float>>& points,
 }
 
 
-void render_obs_box(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointXYZ>::Ptr cloud, string name){
+void render_obs_box(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointXYZ>::Ptr cloud, std::string name){
     // Find bounding box for the road
     PointXYZ minPoint, maxPoint;
     getMinMax3D(*cloud, minPoint, maxPoint);
@@ -79,13 +79,13 @@ void render_obs_box(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointX
     box.y_max = maxPoint.y;
     box.z_max = maxPoint.z;
   
-  	float obj_length = maxPoint.x - minPoint.x;
+    float obj_length = maxPoint.x - minPoint.x;
     float obj_width = maxPoint.y - minPoint.y;
     float obj_height = maxPoint.z - minPoint.z;
   
-    vector<int> c;
+    std::vector<int> c;
     // color based on properties
-  	if (obj_length > 1.3 || obj_width > 1.3){
+    if (obj_length > 1.3 || obj_width > 1.3){
       //likely car
       c = {1,0,0};
     }
@@ -111,8 +111,8 @@ void render_obs_box(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointX
 
 void render_cluster(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointXYZ>::Ptr& obs){
 
-    vector<PointCloud<PointXYZ>::Ptr> clusters;
-    vector<std::vector<float>> pts;
+    std::vector<PointCloud<PointXYZ>::Ptr> clusters;
+    std::vector<std::vector<float>> pts;
 
     KdTree* tree = new KdTree;
 
@@ -120,17 +120,17 @@ void render_cluster(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointX
 
     for (int i = 0; i < obs->points.size(); i++) {
         auto pt = obs->points[i];
-        pts.push_back(vector<float> {pt.x, pt.y, pt.z});
-        tree->insert(vector<float> {pt.x, pt.y, pt.z}, i);
+        pts.push_back(std::vector<float> {pt.x, pt.y, pt.z});
+        tree->insert(std::vector<float> {pt.x, pt.y, pt.z}, i);
     }
 
     log("Starting Cluster");
 
-    vector<vector<int>> clusterIndices = euclideanCluster(pts, tree);
+    std::vector<std::vector<int>> clusterIndices = euclideanCluster(pts, tree);
 
-    for (auto clusterIndex : clusterIndices) {
+    for (auto& clusterIndex : clusterIndices) {
         PointCloud<PointXYZ>::Ptr obs_cluster (new PointCloud<PointXYZ>);
-        for (auto pointIndex : clusterIndex) {
+        for (auto& pointIndex : clusterIndex) {
             obs_cluster->points.push_back (obs->points[pointIndex]);
         }
         obs_cluster->width = obs_cluster->points.size();
