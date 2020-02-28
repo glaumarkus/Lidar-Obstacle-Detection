@@ -1,4 +1,18 @@
-# Sensor Fusion Self-Driving Car Course
+# Lidar Obstacle Detection
+
+This project was done as part of the Sensor Fusion course for self-driving cars. Official README and setup can be found at the bottom.
+
+The main objectives of this project is to process LIDAR data from a HDL 64. The project includes 2 datasets with XYZI pointclouds recorded while driving on a street. Common obstacles within the observation are other cars, bicyles or street boundaries. The processing can be broken down in different calculations:
+1. filter Pointcloud to reduce processing time
+2. segment Points into road and obstacle segments
+3. cluster obstacle segments to retrieve bounding boxes and soft classification ob obstacle
+
+The file structure includes:
+
+|--src
+|----
+
+## Official README
 
 ### Welcome to the Sensor Fusion course for self-driving cars.
 
