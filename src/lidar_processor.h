@@ -19,7 +19,7 @@
 /*
 Render Mode 0 = Org, 1 = Filter, 2 = Plane/Obs, 3 = Filtered Clusters Bounding Box
 */
-#define RENDER_MODE 3
+const int RENDER_MODE  = 3;
 
 /*
 Filter Params
@@ -28,8 +28,8 @@ const string DATASET = "../src/sensors/data/pcd/data_1";
 const double FILTER_RESOLUTION = .2;
 const Eigen::Vector4f CROPBOX_MIN = {-7,-6.5,-2,0};
 const Eigen::Vector4f CROPBOX_MAX = {20,6.5,1.5,1};
-const Eigen::Vector4f ROOF_MIN = {-1.5,-1.7,-1,1};
-const Eigen::Vector4f ROOF_MAX = {2.6,1.7,-0.4,1};
+const Eigen::Vector4f ROOF_MIN = {-2.5,-1.5,-2,0};
+const Eigen::Vector4f ROOF_MAX = {2.6,1.5,2,1};
 
 using namespace pcl;
 using namespace std;
@@ -62,11 +62,11 @@ public:
                 if (RENDER_MODE != 1){
                     pair<PointCloud<pcl::PointXYZ>::Ptr,PointCloud<pcl::PointXYZ>::Ptr> segments = ransac3D(cloud_filter);
                     if (RENDER_MODE != 2) {
-                        replace_plane(viewer, segments.first);
+                        renderPointCloud(viewer, segments.first, "road cloud", Color(0,1,0));
                         render_cluster(viewer,segments.second);
                     }
                     else {
-                        renderPointCloud(viewer, segments.first, "road cloud", Color(1,1,1));
+                        renderPointCloud(viewer, segments.first, "road cloud", Color(0,1,0));
                         renderPointCloud(viewer, segments.second, "obs cloud", Color(1,0,0));
                     }
                 }
@@ -83,35 +83,6 @@ public:
             viewer->spinOnce ();
         } 
     }
-
-    void replace_plane(visualization::PCLVisualizer::Ptr& viewer, PointCloud<PointXYZ>::Ptr cloud){
-
-        // Find bounding box for the road
-        PointXYZ minPoint, maxPoint;
-        getMinMax3D(*cloud, minPoint, maxPoint);
-
-        Box box;
-        box.x_min = -3;
-        box.y_min = -1.5;
-        box.z_min = minPoint.z;
-        box.x_max = 15;
-        box.y_max = 1.5;
-        box.z_max = minPoint.z + 0.05;
-
-
-        string cube = "ROAD";
-        viewer->addCube(box.x_min, box.x_max, box.y_min, box.y_max, box.z_min, box.z_max, 0, 1, 0, cube);
-        viewer->setShapeRenderingProperties(visualization::PCL_VISUALIZER_REPRESENTATION, visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, cube); 
-        viewer->setShapeRenderingProperties(visualization::PCL_VISUALIZER_COLOR, 0, 1, 0, cube);
-        viewer->setShapeRenderingProperties(visualization::PCL_VISUALIZER_OPACITY, 0.5, cube);
-        
-        std::string cubeFill = "ROAD_Fill";
-        viewer->addCube(box.x_min, box.x_max, box.y_min, box.y_max, box.z_min, box.z_max, 0, 1, 0, cubeFill);
-        viewer->setShapeRenderingProperties(visualization::PCL_VISUALIZER_REPRESENTATION, visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, cubeFill); 
-        viewer->setShapeRenderingProperties(visualization::PCL_VISUALIZER_COLOR, 0, 1, 0, cubeFill);
-        viewer->setShapeRenderingProperties(visualization::PCL_VISUALIZER_OPACITY, 0.1, cubeFill);
-    }
-
 
     void renderPointCloud(visualization::PCLVisualizer::Ptr& viewer, const PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string name, Color color)
     {
@@ -145,7 +116,7 @@ public:
         CropBox<PointXYZ> roof(true);
         roof.setMin(ROOF_MIN);
         roof.setMax(ROOF_MAX);
-        roof.setInputCloud(cloud);
+        roof.setInputCloud(cloud_c);
         roof.filter(indices);
 
         PointIndices::Ptr inliers {new PointIndices};
@@ -161,11 +132,6 @@ public:
         return cloud_c;
 
     }
-
-private:
-    PointCloud<PointXYZ> current_cloud;
-    float *ground_level;
-
 };
 
 
