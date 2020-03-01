@@ -1,23 +1,55 @@
 # Lidar Obstacle Detection
 
-This project was done as part of the Sensor Fusion course for self-driving cars. Official README and setup can be found at the bottom.
+This project was done as part of the [Sensor Fusion course for self-driving cars](https://github.com/udacity/SFND-LIDAR-Obstacle-Detection). Official README and setup can be found at the bottom.
 
 The main objectives of this project is to process LIDAR data from a HDL 64. The project includes 2 datasets with XYZI pointclouds recorded while driving on a street. Common obstacles within the observation are other cars, bicyles or street boundaries. The processing can be broken down in different calculations:
 1. filter Pointcloud to reduce processing time
 2. segment Points into road and obstacle segments
 3. cluster obstacle segments to retrieve bounding boxes and soft classification ob obstacle
 
-The file structure includes:
+Input Data:
 
-|--src
-|----render
-|------box.h
-|----sensors
-|------data/pcd
-|--------data_1
-|--------data_2
-|----environment.cpp
-|----
+
+Relevant files for processing the input data:
+'''
+src
+--sensors
+----data/pcd
+------data_1 			// contains pcl files for track 1
+------data_2 			// contains pcl files for track 2
+--environment.cpp 		// initializes visualization and lidar_processing
+--lidar_processing.h 	// loads params for visualization and initializes pcl-stream
+--camera.h 				// contains camera settings
+--filter.h 				// contains raw cloud filter
+--ransac.h 				// contains 3D ransac for segmentation
+--tree.h 				// contains KD-tree class
+--clustering.h 			// contains euclidean clustering for obstacle detections
+--render.h 				// contains rendering functions
+--params.h 				// loads pipeline params for data stream
+--params.txt 			// contains parameters for pipeline
+'''
+
+All parameters relevant for this project can be changed while running the program within the params.txt file attached. 
+
+
+## 1. Filter Point Cloud data
+
+There are several steps included in filtering the raw input data. The first applied method is applying a voxel grid to the original data, to decrease the point cloud resulution. Afterwards two seperate crops are done to decrease the horizion of the data: we only care about close surroundings that are either ahead or next to us. Therefore we limit the data to 6 meters left and right and 25 meters upfront. Additionally the points that are closer than 1.5 meters around are likely to be our own car and therefore also cropped out. 
+
+// steps applied
+
+## 2. Point Segmentation
+
+For seperating road and obstacles a segmentation is applied to the filtered data. When looking at the data its obvious that most points received actually display the road. Now properties of a road usually are that they are straight and even. Within an iterative process planes of random points are calculated evaluated against all points. After taking the plane with least overall distance after given iterations, we receive a good estimation of a road plane and can seperate every cloud point into road or obstacle.
+
+//steps applied
+
+## 3. Cluster obstacles
+
+After successfully retrieving an obstacle segment of the filtered point cloud, different objects can be derived from its surroundings. Individual obstacles are identified by a distance from other objects. Points that have a density similar to the resolution of the filtered image likely define the boundaries of said object. From the individual objects outer boundaries a box is displayed around the object.
+
+// steps applied
+
 
 ## Official README
 

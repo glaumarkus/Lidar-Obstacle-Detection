@@ -1,0 +1,23 @@
+# dataset
+dataset: ../src/sensors/data/pcd/data_2
+
+# filtering parameters
+filter_resolution: 0.2
+crop_min_point: -7.0 -6.5 -2.0 0.0
+crop_max_point: 25.0 6.5 1.5 1.0
+
+# RANSAC parameters
+max_iterations: 30
+distance_threshold: 0.3
+
+# clustering parameters
+cluster_tolerance: 0.3
+cluster_min_size: 20
+cluster_max_size: 4000
+
+# visualization options
+render_input_cloud: 0
+render_filtered_cloud: 0
+render_obstacles: 0
+render_plane: 1
+render_clusters: 1

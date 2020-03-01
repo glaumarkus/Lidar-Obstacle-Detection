@@ -1,5 +1,6 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
+
 #include <pcl/visualization/pcl_visualizer.h>
 
 enum CameraAngle

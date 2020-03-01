@@ -1,8 +1,6 @@
 #ifndef TREE_H_
 #define TREE_H_
 
-#define DIMSIZE 3
-
 struct Node
 {
     std::vector<float> point;
@@ -28,7 +26,7 @@ struct KdTree
             *node = new Node(point, id);
         }
         else {
-            uint cd = depth % DIMSIZE;
+            uint cd = depth % 3;
             if (point[cd] < ((*node)->point[cd])) {
                 insertHelper(&((*node)->left), depth+1, point, id);
             } else {
@@ -58,7 +56,7 @@ struct KdTree
             }
 
             // Split left or right depending on depth and recurse
-            auto split_lr = depth % DIMSIZE;
+            auto split_lr = depth % 3;
             if (target[split_lr] - distanceTol < node->point[split_lr])
                 searchHelper(target, node->left, depth+1, distanceTol, ids);
             if (target[split_lr] + distanceTol > node->point[split_lr])

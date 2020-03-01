@@ -4,24 +4,18 @@
 #include <vector>
 #include <unordered_set>
 #include <pcl/common/common.h>
+#include <cmath>
 
-using namespace std;
-using namespace pcl;
-
-#define MAX_ITERATIONS 40
-#define DISTANCE_TOLERANCE 0.4
-
-
-pair<PointCloud<PointXYZ>::Ptr, PointCloud<PointXYZ>::Ptr> ransac3D(PointCloud<PointXYZ>::Ptr cloud){
+std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud){
 
     srand(time(NULL));
-    unordered_set<int> inliers;
+    std::unordered_set<int> inliers;
 
     int idx = 0;
 
     while (idx < MAX_ITERATIONS){
 
-        unordered_set<int> inliers_temp;
+        std::unordered_set<int> inliers_temp;
 
         while (inliers_temp.size() < 3){
             inliers_temp.insert(rand()%(cloud->points.size()));
@@ -54,7 +48,7 @@ pair<PointCloud<PointXYZ>::Ptr, PointCloud<PointXYZ>::Ptr> ransac3D(PointCloud<P
             float x = p.x;
             float y = p.y;
             float z = p.z;
-            float dist = fabs(a * x + b * y + c * z + d) / sqrt(a*a + b*b + c*c);
+            float dist = abs(a * x + b * y + c * z + d) / sqrt(a*a + b*b + c*c);
 
             if (dist < DISTANCE_TOLERANCE)
                 inliers_temp.insert(i);
@@ -67,20 +61,19 @@ pair<PointCloud<PointXYZ>::Ptr, PointCloud<PointXYZ>::Ptr> ransac3D(PointCloud<P
         idx++;
     }
 
-    PointCloud<PointXYZ>::Ptr cloud_road(new PointCloud<PointXYZ>());
-    PointCloud<PointXYZ>::Ptr cloud_obs(new PointCloud<PointXYZ>());
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_road(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_obs(new pcl::PointCloud<pcl::PointXYZ>());
 
     for(uint i = 0; i < cloud->points.size(); i++)
     {
-        PointXYZ point = cloud->points[i];
+        pcl::PointXYZ point = cloud->points[i];
         if(inliers.count(i))
             cloud_road->points.push_back(point);
         else
             cloud_obs->points.push_back(point);
     }
 
-    return pair<PointCloud<PointXYZ>::Ptr, PointCloud<PointXYZ>::Ptr> {cloud_road,cloud_obs};
-
+    return std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> {cloud_road,cloud_obs};
 }
 
 #endif
