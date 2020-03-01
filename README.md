@@ -11,7 +11,7 @@ Input Data:
 
 
 Relevant files for processing the input data:
-'''
+'''bash
 src
 --sensors
 ----data/pcd
