@@ -14,7 +14,7 @@ struct PipelineParams {
   float FILTER_RESOLUTION;
   Eigen::Vector4f CROPBOX_MIN;
   Eigen::Vector4f CROPBOX_MAX;
-  Eigen::Vector4f ROOF_MIN
+  Eigen::Vector4f ROOF_MIN;
 
   // RANSAC parameters
   int MAX_ITERATIONS;
