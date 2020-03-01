@@ -11,7 +11,7 @@ Input Data:
 
 
 Relevant files for processing the input data:
-'''bash
+```
 src
 --sensors
 ----data/pcd
@@ -27,7 +27,7 @@ src
 --render.h 				// contains rendering functions
 --params.h 				// loads pipeline params for data stream
 --params.txt 			// contains parameters for pipeline
-'''
+```
 
 All parameters relevant for this project can be changed while running the program within the params.txt file attached. 
 
