@@ -6,7 +6,10 @@
 #include <pcl/common/common.h>
 #include <cmath>
 
-std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud){
+std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> ransac3D(
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
+    int MAX_ITERATIONS,
+    float DISTANCE_TOLERANCE){
 
     srand(time(NULL));
     std::unordered_set<int> inliers;
