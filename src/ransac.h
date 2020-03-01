@@ -7,7 +7,7 @@
 #include <cmath>
 
 std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> ransac3D(
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
     int MAX_ITERATIONS,
     float DISTANCE_TOLERANCE){
 
