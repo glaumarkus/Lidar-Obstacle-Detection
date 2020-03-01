@@ -15,18 +15,18 @@ Relevant files for processing the input data:
 src
 --sensors
 ----data/pcd
-------data_1 			// contains pcl files for track 1
-------data_2 			// contains pcl files for track 2
---environment.cpp 		// initializes visualization and lidar_processing
---lidar_processing.h 	// loads params for visualization and initializes pcl-stream
+------data_1 				// contains pcl files for track 1
+------data_2 				// contains pcl files for track 2
+--environment.cpp 			// initializes visualization and lidar_processing
+--lidar_processing.h 			// loads params for visualization and initializes pcl-stream
 --camera.h 				// contains camera settings
 --filter.h 				// contains raw cloud filter
 --ransac.h 				// contains 3D ransac for segmentation
 --tree.h 				// contains KD-tree class
---clustering.h 			// contains euclidean clustering for obstacle detections
+--clustering.h 				// contains euclidean clustering for obstacle detections
 --render.h 				// contains rendering functions
 --params.h 				// loads pipeline params for data stream
---params.txt 			// contains parameters for pipeline
+--params.txt 				// contains parameters for pipeline
 ```
 
 All parameters relevant for this project can be changed while running the program within the params.txt file attached. 
